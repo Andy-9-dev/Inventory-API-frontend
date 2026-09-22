@@ -24,39 +24,53 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 
 /* =============================================================================
-   2. THEME-DARK — Terminal aesthetic
+   2. THEME-DARK — "Obsidian Phosphor" terminal aesthetic
+   Palette tokens:
+     bg:        #091611  near-black, green-tinted
+     surface:   #16221d  card container
+     surface2:  #121e19  lower / nested surface
+     border:    #3b4b3f  subtle divider
+     border-2:  #849587  stronger border / rule
+     accent:    #00ff9c  phosphor green
+     accent-on: #00391f  text colour when sitting on accent bg
+     text-1:    #d7e6de  primary body
+     text-2:    #b9cbbc  secondary / muted
+     red:       #ffb4ab  error text (on --red-bg)
+     red-bg:    #93000a  error surface
    ========================================================================== */
 
 .theme-dark {
   /* ── Palette ── */
-  --bg:             #0a0a0a;
-  --surface:        #0f0f0f;
-  --surface2:       #141414;
-  --border:         #2e2e2e;
+  --bg:             #091611;
+  --surface:        #16221d;
+  --surface2:       #121e19;
+  --border:         #3b4b3f;
+  --border-2:       #849587;
   --accent:         #00ff9c;
   --accent-dim:     #00cc7d;
-  --text-1:         #e0e0e0;
-  --text-2:         #666666;
+  --accent-on:      #00391f;
+  --text-1:         #d7e6de;
+  --text-2:         #b9cbbc;
   --green:          #00ff9c;
-  --green-bg:       rgba(0, 255, 156, 0.07);
-  --green-border:   rgba(0, 255, 156, 0.30);
-  --red:            #ff4444;
-  --red-bg:         rgba(255, 68, 68, 0.07);
-  --red-border:     rgba(255, 68, 68, 0.28);
-  --orange:         #ffaa00;
-  --orange-bg:      rgba(255, 170, 0, 0.07);
-  --orange-border:  rgba(255, 170, 0, 0.28);
+  --green-bg:       rgba(0, 255, 156, 0.08);
+  --green-border:   rgba(0, 255, 156, 0.28);
+  --red:            #ffb4ab;
+  --red-bg:         rgba(147, 0, 10, 0.55);
+  --red-border:     rgba(255, 180, 171, 0.30);
+  --orange:         #ffb4ab;
+  --orange-bg:      rgba(147, 0, 10, 0.35);
+  --orange-border:  rgba(255, 180, 171, 0.25);
 
   /* ── Geometry ── */
-  --radius-xl:  3px;
-  --radius:     2px;
+  --radius-xl:  4px;
+  --radius:     3px;
   --radius-sm:  2px;
-  --shadow:     none;
+  --shadow:     0 2px 16px rgba(0, 0, 0, 0.55);
 
-  /* ── Typography ── */
-  --font-body:    'Courier New', Courier, monospace;
-  --font-heading: 'Courier New', Courier, monospace;
-  --font-ui:      'Courier New', Courier, monospace;
+  /* ── Typography — JetBrains Mono throughout ── */
+  --font-body:    'JetBrains Mono', 'Courier New', monospace;
+  --font-heading: 'JetBrains Mono', 'Courier New', monospace;
+  --font-ui:      'JetBrains Mono', 'Courier New', monospace;
 
   /* ── Misc ── */
   color-scheme: dark;
@@ -64,217 +78,380 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   color: var(--text-1);
   font-family: var(--font-body);
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Dark: header accent line (green underline) ── */
+/* ── Dark: base colour (must come before pattern so shorthand doesn't stomp it) ── */
+.theme-dark.app-layout,
+.theme-dark {
+  background-color: var(--bg);
+  color: var(--text-1);
+}
+
+/* ── Dark: layout background — faint circuit pattern at opacity ~0.06 ── */
+.theme-dark .app-layout,
+.theme-dark.app-layout {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg stroke='%2300ff9c' fill='%2300ff9c'%3E%3Cline x1='0' y1='0'  x2='80' y2='0'  stroke-width='0.6' opacity='0.055'/%3E%3Cline x1='0' y1='40' x2='80' y2='40' stroke-width='0.6' opacity='0.055'/%3E%3Cline x1='0' y1='80' x2='80' y2='80' stroke-width='0.6' opacity='0.055'/%3E%3Cline x1='0'  y1='0' x2='0'  y2='80' stroke-width='0.6' opacity='0.055'/%3E%3Cline x1='40' y1='0' x2='40' y2='80' stroke-width='0.6' opacity='0.055'/%3E%3Cline x1='80' y1='0' x2='80' y2='80' stroke-width='0.6' opacity='0.055'/%3E%3Ccircle cx='0'  cy='0'  r='2'   opacity='0.07'/%3E%3Ccircle cx='40' cy='0'  r='2'   opacity='0.07'/%3E%3Ccircle cx='80' cy='0'  r='2'   opacity='0.07'/%3E%3Ccircle cx='0'  cy='40' r='2'   opacity='0.07'/%3E%3Ccircle cx='40' cy='40' r='2.4' opacity='0.08'/%3E%3Ccircle cx='80' cy='40' r='2'   opacity='0.07'/%3E%3Ccircle cx='0'  cy='80' r='2'   opacity='0.07'/%3E%3Ccircle cx='40' cy='80' r='2'   opacity='0.07'/%3E%3Ccircle cx='80' cy='80' r='2'   opacity='0.07'/%3E%3Ccircle cx='20' cy='20' r='1.2' opacity='0.05'/%3E%3Ccircle cx='60' cy='20' r='1.2' opacity='0.05'/%3E%3Ccircle cx='20' cy='60' r='1.2' opacity='0.05'/%3E%3Ccircle cx='60' cy='60' r='1.2' opacity='0.05'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 80px 80px;
+}
+
+/* ── Dark: header ── */
+.theme-dark .app-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Dark: header accent line (phosphor underline) ── */
 .theme-dark .app-header__title-block h1::after {
   background: var(--accent);
   border-radius: 0;
-  height: 2px;
+  height: 1px;
   width: 100%;
-  margin-top: 6px;
+  margin-top: 5px;
 }
 
-/* ── Dark: theme toggle button ── */
+/* ── Dark: header cursor > prefix on h1 ── */
+.theme-dark .app-header__title-block h1::before {
+  content: "> ";
+  color: var(--accent);
+}
+
+/* ── Dark: theme toggle ── */
 .theme-dark .theme-toggle {
   background: transparent;
-  color: var(--accent);
-  border: 1px solid var(--accent);
+  color: var(--text-2);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   font-family: var(--font-ui);
   font-size: 11px;
-  font-weight: normal;
-  padding: 6px 12px;
+  font-weight: 400;
+  padding: 5px 11px;
   cursor: pointer;
-  letter-spacing: 0.5px;
-  text-transform: lowercase;
-  transition: background 0.15s, color 0.15s;
+  letter-spacing: 0.3px;
+  transition: border-color 0.15s, color 0.15s;
 }
 .theme-dark .theme-toggle:hover {
-  background: var(--accent);
-  color: #0a0a0a;
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-/* ── Dark: section count pill ── */
+/* ── Dark: main cards ── */
+.theme-dark .card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* ── Dark: section count chip ── */
 .theme-dark .section-count {
-  border-radius: 0;
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  border-color: var(--border);
+  color: var(--text-2);
+  font-weight: 600;
 }
 
-/* ── Dark: stat cards — left accent bar ── */
+/* ── Dark: stat cards ── */
 .theme-dark .stat-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
   border-left: 2px solid var(--accent);
-  border-radius: 0;
+  border-radius: var(--radius-sm);
+  box-shadow: none;
 }
 .theme-dark .stat-card:hover {
+  background: var(--surface);
   border-left-color: var(--accent);
-  background: var(--surface2);
 }
 .theme-dark .stat-card--skeleton {
   border-left: 2px solid var(--border);
 }
-
-/* ── Dark: product cards — sharp corners, green hover glow ── */
-.theme-dark .product-card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 0 8px rgba(0, 255, 156, 0.15);
+.theme-dark .stat-value {
+  color: var(--accent);
+  font-weight: 700;
+}
+.theme-dark .stat-label {
+  color: var(--text-2);
+  letter-spacing: 1px;
 }
 
-/* ── Dark: category pill — monospace tag style ── */
+/* ── Dark: product cards ── */
+.theme-dark .product-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.theme-dark .product-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(0, 255, 156, 0.18);
+}
+.theme-dark .product-card__price {
+  color: var(--accent);
+}
 .theme-dark .product-card__category {
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   font-family: var(--font-ui);
   text-transform: lowercase;
   letter-spacing: 0;
+  background: var(--green-bg);
+  border-color: var(--green-border);
+  color: var(--accent);
 }
 .theme-dark .product-card__category::before { content: "#"; }
 
-/* ── Dark: stock bar — ASCII block segments ── */
+/* ── Dark: stock bars — segmented phosphor blocks ── */
 .theme-dark .stock-bar-wrap {
-  height: 8px;
+  height: 6px;
   background: transparent;
   border: 1px solid var(--border);
   border-radius: 0;
-  position: relative;
   overflow: hidden;
 }
-/* Simulate blocky segments with a repeating gradient */
 .theme-dark .stock-bar-fill {
   height: 100%;
   border-radius: 0;
   background: repeating-linear-gradient(
     90deg,
-    var(--accent)    0px,
-    var(--accent)    6px,
-    transparent      6px,
-    transparent      8px
+    var(--accent) 0px,
+    var(--accent) 5px,
+    transparent   5px,
+    transparent   7px
   );
   transition: width 0.3s steps(12);
 }
 .theme-dark .stock-bar-fill--low {
   background: repeating-linear-gradient(
     90deg,
-    var(--red)    0px,
-    var(--red)    6px,
-    transparent   6px,
-    transparent   8px
+    var(--red)  0px,
+    var(--red)  5px,
+    transparent 5px,
+    transparent 7px
   );
 }
 
-/* ── Dark: order list — full-width rule lines, no outer border-radius ── */
+/* ── Dark: order list ── */
 .theme-dark .order-list {
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   border-color: var(--border);
 }
 .theme-dark .order-row:hover {
-  background: var(--surface2);
+  background: var(--surface);
+}
+.theme-dark .order-row__product {
+  color: var(--text-1);
+}
+.theme-dark .order-row__qty,
+.theme-dark .order-row__date {
+  color: var(--text-2);
 }
 
-/* ── Dark: badges — bracket text, no pill shape ── */
+/* ── Dark: status badges ── */
 .theme-dark .badge {
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  padding: 1px 0;
-  background: transparent;
-  border: none;
-  letter-spacing: 0;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 2px 8px;
 }
 .theme-dark .badge--confirmed {
+  background: var(--green-bg);
   color: var(--green);
+  border: 1px solid var(--green-border);
 }
-.theme-dark .badge--confirmed::before { content: "["; color: var(--text-2); }
-.theme-dark .badge--confirmed::after  { content: "]"; color: var(--text-2); }
+.theme-dark .badge--confirmed::before,
+.theme-dark .badge--confirmed::after { content: none; }
 .theme-dark .badge--rejected {
+  background: var(--red-bg);
   color: var(--red);
+  border: 1px solid var(--red-border);
 }
-.theme-dark .badge--rejected::before { content: "["; color: var(--text-2); }
-.theme-dark .badge--rejected::after  { content: "]"; color: var(--text-2); }
+.theme-dark .badge--rejected::before,
+.theme-dark .badge--rejected::after { content: none; }
 
-/* ── Dark: primary button — uppercase prompt style ── */
+/* ── Dark: primary button — bold filled phosphor green ── */
 .theme-dark .btn-primary {
-  background: transparent;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  border-radius: 0;
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 8px 18px;
-}
-.theme-dark .btn-primary::before { content: "[ "; }
-.theme-dark .btn-primary::after  { content: " ]"; }
-.theme-dark .btn-primary:hover:not(:disabled) {
   background: var(--accent);
-  color: #0a0a0a;
+  color: var(--accent-on);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.theme-dark .btn-primary::before { content: none; }
+.theme-dark .btn-primary::after  { content: none; }
+.theme-dark .btn-primary:hover:not(:disabled) {
+  background: var(--accent-dim);
+  border-color: var(--accent-dim);
+  box-shadow: 0 0 12px rgba(0, 255, 156, 0.25);
 }
 .theme-dark .btn-primary:active:not(:disabled) {
-  transform: none;
-  filter: brightness(0.85);
+  transform: scale(0.98);
+  filter: brightness(0.9);
 }
-.theme-dark .btn-primary:disabled { opacity: 0.35; }
+.theme-dark .btn-primary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
 
-/* ── Dark: status messages — terminal output lines ── */
+/* ── Dark: status / feedback messages ── */
 .theme-dark .status-msg {
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   border-left-width: 2px;
   font-family: var(--font-ui);
+  font-size: 12px;
 }
 .theme-dark .status-msg--success,
 .theme-dark .status-msg.success {
-  background: transparent;
+  background: var(--green-bg);
   border-color: var(--green);
+  color: var(--green);
 }
 .theme-dark .status-msg--success::before,
 .theme-dark .status-msg.success::before { content: "> "; color: var(--green); }
-
 .theme-dark .status-msg--error,
 .theme-dark .status-msg.error {
-  background: transparent;
-  border-color: var(--red);
+  background: var(--red-bg);
+  border-color: var(--red-border);
+  color: var(--red);
 }
 .theme-dark .status-msg--error::before,
 .theme-dark .status-msg.error::before { content: "> "; color: var(--red); }
-
 .theme-dark .status-msg--warning,
 .theme-dark .status-msg.warning {
-  background: transparent;
-  border-color: var(--orange);
+  background: var(--orange-bg);
+  border-color: var(--orange-border);
+  color: var(--orange);
 }
 .theme-dark .status-msg--warning::before,
 .theme-dark .status-msg.warning::before { content: "> "; color: var(--orange); }
-
 .theme-dark .status-msg--muted,
 .theme-dark .status-msg.muted {
-  background: transparent;
+  background: var(--surface2);
   border-color: var(--border);
+  color: var(--text-2);
 }
 .theme-dark .status-msg--muted::before,
 .theme-dark .status-msg.muted::before { content: "> "; color: var(--text-2); }
 
 /* ── Dark: form collapsible ── */
 .theme-dark .form-collapsible {
-  border-radius: 0;
+  border-radius: var(--radius-sm);
+  border-color: var(--border);
 }
 .theme-dark .form-collapsible summary {
+  background: var(--surface2);
   border-radius: 0;
+  color: var(--accent);
+}
+.theme-dark .form-collapsible summary:hover {
+  background: var(--border);
 }
 
-/* ── Dark: inputs ── */
+/* ── Dark: inputs + selects ── */
+.theme-dark input[type="text"],
+.theme-dark input[type="number"],
+.theme-dark input[type="email"],
+.theme-dark input[type="password"],
+.theme-dark select {
+  background: var(--surface2);
+  color: var(--text-1);
+  border-color: var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-ui);
+}
 .theme-dark input[type="text"]:focus,
 .theme-dark input[type="number"]:focus,
+.theme-dark input[type="email"]:focus,
+.theme-dark input[type="password"]:focus,
 .theme-dark select:focus {
-  box-shadow: 0 0 0 1px var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(0, 255, 156, 0.15);
+  outline: none;
+}
+.theme-dark input::placeholder { color: var(--text-2); opacity: 0.55; }
+.theme-dark select option { background: var(--surface); }
+
+/* ── Dark: labels ── */
+.theme-dark label {
+  color: var(--text-2);
+  letter-spacing: 0.6px;
 }
 
-/* ── Dark: header cursor blink on h1 ── */
-.theme-dark .app-header__title-block h1::before {
-  content: "> ";
+/* ── Dark: form section labels (command-line prefix style) ── */
+.theme-dark .field-cmd-label {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--text-2);
+  margin-bottom: 4px;
+  display: block;
+  letter-spacing: 0;
+}
+.theme-dark .field-cmd-label .cmd-prompt {
   color: var(--accent);
+}
+.theme-dark .field-cmd-label .cmd-flag {
+  color: var(--text-1);
+}
+
+/* ── Dark: logout button ── */
+.theme-dark .btn-logout {
+  background: transparent;
+  color: var(--red);
+  border: 1px solid var(--border);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  padding: 5px 11px;
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s, color 0.15s;
+}
+.theme-dark .btn-logout:hover {
+  border-color: var(--red);
+  color: var(--red);
+  background: var(--red-bg);
+}
+
+/* ── Dark: nav links ── */
+.theme-dark .app-nav__link {
+  color: var(--text-2);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  letter-spacing: 0.3px;
+}
+.theme-dark .app-nav__link:hover {
+  color: var(--text-1);
+  background: var(--surface2);
+}
+.theme-dark .app-nav__link--active {
+  color: var(--accent);
+  background: rgba(0, 255, 156, 0.07);
+}
+.theme-dark .app-nav__link--active::before { content: none; }
+.theme-dark .app-nav__link--active::after  { content: none; }
+
+/* ── Dark: footer ── */
+.theme-dark .app-footer {
+  background: var(--surface);
+  border-top-color: var(--border);
+  color: var(--text-2);
+}
+
+/* ── Dark: page heading ── */
+.theme-dark .page-heading h2 {
+  color: var(--text-1);
+}
+.theme-dark .page-heading__sub {
+  color: var(--text-2);
 }
 
 
@@ -625,7 +802,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  background: var(--bg);
+  background-color: var(--bg);
   color: var(--text-1);
   font-family: var(--font-body);
   font-size: inherit;
@@ -1108,4 +1285,527 @@ select option { background: var(--surface); }
 }
 @media (max-width: 480px) {
   .product-grid { grid-template-columns: 1fr; }
+}
+
+/* =============================================================================
+   6. AUTH PAGES  (/login, /register)
+   Always rendered outside .app-layout — no theme class available.
+   Hard-coded to Obsidian Phosphor dark so the auth experience is consistent
+   regardless of which theme the user had selected inside the app.
+   ========================================================================== */
+
+/* ── Page shell ── */
+/* ─────────────────────────────────────────────────────────────────────────────
+   CIRCUIT-BOARD SVG PATTERN
+   Defined once here as a data-URI and reused by .auth-page and .theme-dark .app-layout.
+
+   Tile is 80×80px. Contents:
+     - Horizontal traces at y=0, y=40, y=80   (stroke-width 0.6)
+     - Vertical   traces at x=0, x=40, x=80   (stroke-width 0.6)
+     - Circular nodes (r=2) at intersections: (0,0) (40,0) (80,0)
+                                               (0,40)(40,40)(80,40)
+                                               (0,80)(40,80)(80,80)
+     - Smaller midpoint node (r=1.2) at (20,20),(60,20),(20,60),(60,60)
+   Colour: #00ff9c. The opacity on each element controls visibility per usage.
+   Auth pages use opacity="0.22"; app-layout uses opacity="0.055".
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Auth-page pattern — opacity 0.22 */
+.auth-page {
+  --circuit-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg stroke='%2300ff9c' fill='%2300ff9c'%3E%3Cline x1='0' y1='0'  x2='80' y2='0'  stroke-width='0.6' opacity='0.22'/%3E%3Cline x1='0' y1='40' x2='80' y2='40' stroke-width='0.6' opacity='0.22'/%3E%3Cline x1='0' y1='80' x2='80' y2='80' stroke-width='0.6' opacity='0.22'/%3E%3Cline x1='0'  y1='0' x2='0'  y2='80' stroke-width='0.6' opacity='0.22'/%3E%3Cline x1='40' y1='0' x2='40' y2='80' stroke-width='0.6' opacity='0.22'/%3E%3Cline x1='80' y1='0' x2='80' y2='80' stroke-width='0.6' opacity='0.22'/%3E%3Ccircle cx='0'  cy='0'  r='2'   opacity='0.28'/%3E%3Ccircle cx='40' cy='0'  r='2'   opacity='0.28'/%3E%3Ccircle cx='80' cy='0'  r='2'   opacity='0.28'/%3E%3Ccircle cx='0'  cy='40' r='2'   opacity='0.28'/%3E%3Ccircle cx='40' cy='40' r='2.4' opacity='0.32'/%3E%3Ccircle cx='80' cy='40' r='2'   opacity='0.28'/%3E%3Ccircle cx='0'  cy='80' r='2'   opacity='0.28'/%3E%3Ccircle cx='40' cy='80' r='2'   opacity='0.28'/%3E%3Ccircle cx='80' cy='80' r='2'   opacity='0.28'/%3E%3Ccircle cx='20' cy='20' r='1.2' opacity='0.18'/%3E%3Ccircle cx='60' cy='20' r='1.2' opacity='0.18'/%3E%3Ccircle cx='20' cy='60' r='1.2' opacity='0.18'/%3E%3Ccircle cx='60' cy='60' r='1.2' opacity='0.18'/%3E%3C/g%3E%3C/svg%3E");
+
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background-color: #091611;
+  background-image: var(--circuit-svg);
+  background-repeat: repeat;
+  background-size: 80px 80px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  position: relative;
+}
+
+/* Slow pulse animation — a semi-transparent overlay that breathes in/out,
+   simulating a faint signal travelling across the traces.
+   Uses a pseudo-element so it never touches the card or form elements. */
+.auth-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--circuit-svg);
+  background-repeat: repeat;
+  background-size: 80px 80px;
+  opacity: 0;
+  animation: circuit-pulse 9s ease-in-out infinite;
+  z-index: 0;
+}
+
+/* Everything inside auth-page sits above the pulse layer */
+.auth-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes circuit-pulse {
+  0%   { opacity: 0;    }
+  30%  { opacity: 0.10; }
+  50%  { opacity: 0.14; }
+  70%  { opacity: 0.10; }
+  100% { opacity: 0;    }
+}
+
+/* ── Terminal window card ── */
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  /* Slightly transparent so the circuit pattern very faintly bleeds through
+     the card edge — form area stays fully readable */
+  background: rgba(22, 34, 29, 0.96);
+  border: 1px solid #3b4b3f;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0,255,156,0.05);
+}
+
+/* ── Terminal title-bar chrome ── */
+.auth-card__chrome {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #121e19;
+  border-bottom: 1px solid #3b4b3f;
+}
+
+.auth-card__dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.auth-card__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.auth-card__dot--close   { background: #3b4b3f; }
+.auth-card__dot--min     { background: #3b4b3f; }
+.auth-card__dot--max     { background: #3b4b3f; }
+
+.auth-card__chrome-label {
+  font-size: 10px;
+  color: #849587;
+  letter-spacing: 0.5px;
+  font-family: 'JetBrains Mono', monospace;
+  flex: 1;
+  text-align: center;
+}
+
+/* ── Card body ── */
+.auth-card__body {
+  padding: 32px 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* ── Header: glyph + title + subtitle ── */
+.auth-card__header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-card__glyph {
+  font-size: 26px;
+  color: #00ff9c;
+  line-height: 1;
+  font-family: 'JetBrains Mono', monospace;
+  user-select: none;
+}
+
+.auth-card__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #d7e6de;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.3px;
+  margin: 0;
+  line-height: 1.4;
+}
+/* "> " prompt prefix before title text */
+.auth-card__title::before {
+  content: "> ";
+  color: #00ff9c;
+}
+
+/* Blinking cursor block after the title */
+.auth-card__cursor {
+  display: inline-block;
+  width: 9px;
+  height: 15px;
+  background: #00ff9c;
+  margin-left: 3px;
+  vertical-align: text-bottom;
+  animation: blink-cursor 1.1s step-end infinite;
+}
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.auth-card__subtitle {
+  font-size: 11px;
+  color: #849587;
+  font-family: 'JetBrains Mono', monospace;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+/* ── Fields inside auth card ── */
+.auth-card .inline-form {
+  gap: 18px;
+}
+
+.auth-card .field {
+  gap: 6px;
+}
+
+/* Command-line style label above each input */
+.auth-card .field-cmd-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #849587;
+  margin-bottom: 2px;
+  line-height: 1.4;
+}
+.auth-card .field-cmd-label .cmd-prompt {
+  color: #00ff9c;
+}
+.auth-card .field-cmd-label .cmd-flag {
+  color: #d7e6de;
+}
+
+/* Keep the hidden <label> for accessibility but visually use .field-cmd-label */
+.auth-card label {
+  /* visually hidden — screen readers still read it */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.auth-card input[type="email"],
+.auth-card input[type="password"],
+.auth-card select {
+  background: #121e19;
+  color: #d7e6de;
+  border: 1px solid #3b4b3f;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  padding: 10px 13px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
+}
+.auth-card input::placeholder { color: #849587; opacity: 0.7; }
+.auth-card input:focus,
+.auth-card select:focus {
+  border-color: #00ff9c;
+  box-shadow: 0 0 0 2px rgba(0, 255, 156, 0.15);
+}
+.auth-card input:disabled,
+.auth-card select:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.auth-card select option { background: #16221d; }
+
+/* ── Auth button — bold filled phosphor green ── */
+.auth-card .btn-primary {
+  background: #00ff9c;
+  color: #00391f;
+  border: none;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 13px 24px;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+  width: 100%;
+  align-self: stretch;
+}
+/* No bracket pseudo-content on auth buttons */
+.auth-card .btn-primary::before { content: none; }
+.auth-card .btn-primary::after  { content: none; }
+.auth-card .btn-primary:hover:not(:disabled) {
+  background: #00cc7d;
+  box-shadow: 0 0 16px rgba(0, 255, 156, 0.3);
+}
+.auth-card .btn-primary:active:not(:disabled) {
+  filter: brightness(0.9);
+}
+.auth-card .btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* btn-full: makes any button span full width */
+.btn-full {
+  align-self: stretch;
+  width: 100%;
+}
+
+/* ── Auth status messages ── */
+.auth-card .status-msg {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  border-radius: 3px;
+  padding: 9px 12px;
+  border: none;
+  border-left: 2px solid transparent;
+}
+.auth-card .status-msg--success,
+.auth-card .status-msg.success {
+  background: rgba(0, 255, 156, 0.07);
+  border-left-color: #00ff9c;
+  color: #00ff9c;
+}
+.auth-card .status-msg--success::before,
+.auth-card .status-msg.success::before { content: "> "; }
+.auth-card .status-msg--error,
+.auth-card .status-msg.error {
+  background: rgba(147, 0, 10, 0.5);
+  border-left-color: #ffb4ab;
+  color: #ffb4ab;
+}
+.auth-card .status-msg--error::before,
+.auth-card .status-msg.error::before { content: "> "; }
+
+/* ── Footer link ── */
+.auth-card__footer-link {
+  text-align: center;
+  font-size: 11px;
+  color: #849587;
+  font-family: 'JetBrains Mono', monospace;
+  margin: 0;
+  padding-top: 4px;
+  border-top: 1px solid #3b4b3f;
+}
+.auth-card__footer-link a {
+  color: #00ff9c;
+  text-decoration: none;
+}
+.auth-card__footer-link a:hover {
+  text-decoration: underline;
+}
+
+
+/* =============================================================================
+   7. NAVBAR ADDITIONS
+   New elements introduced by AppLayout.
+   Base (theme-agnostic) structural rules live here.
+   Dark / light overrides are scoped to their theme blocks above.
+   ========================================================================== */
+
+/* ── Brand ── */
+.app-header__brand {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  cursor: pointer;
+  margin: 0;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: 1;
+}
+/* Suppress the ::after underline bar (used on page h1s, not navbar brand) */
+.app-header__brand::after { display: none; }
+
+/* Dark: "> " prefix before brand */
+.theme-dark .app-header__brand::before {
+  content: "> ";
+  color: var(--accent);
+  font-weight: 400;
+  opacity: 0.6;
+}
+
+/* Light: no prefix */
+.theme-light .app-header__brand::before { content: none; }
+
+/* ── Nav links ── */
+.app-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  padding: 0 20px;
+}
+
+.app-nav__link {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  color: var(--text-2);
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+.app-nav__link:hover {
+  color: var(--text-1);
+  background: var(--surface2);
+}
+.app-nav__link--active {
+  color: var(--accent);
+  background: rgba(0, 255, 156, 0.07);
+}
+
+/* Dark active link: pill with left accent rule */
+.theme-dark .app-nav__link--active {
+  border-left: 2px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding-left: 8px;
+}
+/* Clear pseudo-content set elsewhere */
+.theme-dark .app-nav__link--active::before,
+.theme-dark .app-nav__link--active::after { content: none; }
+
+/* Light active link */
+.theme-light .app-nav__link--active {
+  color: var(--accent);
+  background: transparent;
+  border-bottom: 2px solid var(--accent);
+  border-radius: 0;
+}
+
+/* ── Header right-side actions ── */
+.app-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ── User info chip ── */
+.app-header__user {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+.app-header__user-email {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--text-1);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.app-header__user-role {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+/* ── Logout button ── */
+.btn-logout {
+  background: transparent;
+  color: var(--text-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  padding: 5px 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.btn-logout:hover {
+  border-color: var(--red);
+  color: var(--red);
+  background: var(--red-bg);
+}
+
+/* Light theme: softer logout */
+.theme-light .btn-logout {
+  font-style: italic;
+  font-size: 13px;
+  color: var(--text-2);
+  border-color: var(--border);
+}
+.theme-light .btn-logout:hover {
+  color: var(--red);
+  border-color: var(--red);
+  background: var(--red-bg);
+}
+
+/* ── Page heading (DashboardPage) ── */
+.page-heading {
+  margin-bottom: 12px;
+}
+.page-heading h2 {
+  font-size: 16px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--text-1);
+  margin: 0 0 4px;
+  letter-spacing: 0.2px;
+}
+.theme-dark .page-heading h2::before {
+  content: "// ";
+  color: var(--accent);
+  font-weight: 400;
+  opacity: 0.6;
+}
+.page-heading__sub {
+  font-size: 12px;
+  color: var(--text-2);
+  font-family: var(--font-body);
+  margin: 0;
+}
+
+/* ── Stats bar inside .app-main (DashboardPage) ── */
+.app-main .stats-bar-wrap {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+.app-main .stats-bar {
+  max-width: 100%;
+  padding: 0;
+}
+
+/* ── Responsive navbar ── */
+@media (max-width: 768px) {
+  .app-header__inner { flex-wrap: wrap; gap: 10px; padding: 14px 0; }
+  .app-nav           { flex-wrap: wrap; padding: 0; gap: 2px; }
+  .app-header__user  { display: none; }
 }

@@ -1,145 +1,57 @@
-import { useCallback, useEffect, useState } from "react";
-import { fetchOrders, fetchProducts, fetchStats } from "./api";
-import OrderHistorySection from "./components/OrderHistorySection";
-import PlaceOrderSection from "./components/PlaceOrderSection";
-import ProductsSection from "./components/ProductsSection";
-import StatsBar from "./components/StatsBar";
-import type { Order, Product, StatsResponse } from "./types";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import AdminRoute from "./components/AdminRoute";
+import AppLayout from "./components/AppLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
+import DashboardPage from "./pages/DashboardPage";
+import LoginPage from "./pages/LoginPage";
+import OrderHistoryPage from "./pages/OrderHistoryPage";
+import PlaceOrderPage from "./pages/PlaceOrderPage";
+import ProductsPage from "./pages/ProductsPage";
+import RegisterPage from "./pages/RegisterPage";
 import "./App.css";
 
-type Theme = "dark" | "light";
-
+/**
+ * Route tree:
+ *
+ *  /login                — public
+ *  /register             — public
+ *  /                     — ProtectedRoute > AdminRoute > AppLayout > DashboardPage
+ *  /products             — ProtectedRoute > AppLayout > ProductsPage
+ *  /orders/new           — ProtectedRoute > AppLayout > PlaceOrderPage
+ *  /orders               — ProtectedRoute > AppLayout > OrderHistoryPage
+ *  *                     — redirect to /login
+ */
 export default function App() {
-  // ── Theme ─────────────────────────────────────────────────────────────────
-  const [theme, setTheme] = useState<Theme>("dark");
-  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
-
-  // ── Products ──────────────────────────────────────────────────────────────
-  const [products, setProducts] = useState<Product[]>([]);
-  const [productsLoading, setProductsLoading] = useState(true);
-  const [productsError, setProductsError] = useState<string | null>(null);
-
-  // ── Orders ────────────────────────────────────────────────────────────────
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [ordersLoading, setOrdersLoading] = useState(true);
-  const [ordersError, setOrdersError] = useState<string | null>(null);
-
-  // ── Stats ─────────────────────────────────────────────────────────────────
-  const [stats, setStats] = useState<StatsResponse | null>(null);
-  const [statsLoading, setStatsLoading] = useState(true);
-  const [statsError, setStatsError] = useState<string | null>(null);
-
-  // ── Loaders ───────────────────────────────────────────────────────────────
-  const loadProducts = useCallback(async () => {
-    setProductsLoading(true);
-    setProductsError(null);
-    try {
-      setProducts(await fetchProducts());
-    } catch (err) {
-      setProductsError(err instanceof Error ? err.message : "Failed to load products.");
-    } finally {
-      setProductsLoading(false);
-    }
-  }, []);
-
-  const loadOrders = useCallback(async () => {
-    setOrdersLoading(true);
-    setOrdersError(null);
-    try {
-      setOrders(await fetchOrders());
-    } catch (err) {
-      setOrdersError(err instanceof Error ? err.message : "Failed to load orders.");
-    } finally {
-      setOrdersLoading(false);
-    }
-  }, []);
-
-  const loadStats = useCallback(async () => {
-    setStatsLoading(true);
-    setStatsError(null);
-    try {
-      setStats(await fetchStats());
-    } catch (err) {
-      setStatsError(err instanceof Error ? err.message : "Failed to load stats.");
-    } finally {
-      setStatsLoading(false);
-    }
-  }, []);
-
-  // Initial load — all three in parallel
-  useEffect(() => {
-    void loadProducts();
-    void loadOrders();
-    void loadStats();
-  }, [loadProducts, loadOrders, loadStats]);
-
-  const handleProductAdded = useCallback(() => {
-    void loadStats();
-  }, [loadStats]);
-
-  const handleOrderPlaced = useCallback(() => {
-    void loadProducts();
-    void loadOrders();
-    void loadStats();
-  }, [loadProducts, loadOrders, loadStats]);
-
   return (
-    <div className={`app-layout theme-${theme}`}>
-      <header className="app-header">
-        <div className="app-header__inner">
-          <div className="app-header__title-block">
-            <h1>Inventory &amp; Orders</h1>
-            <p className="app-subtitle">
-              Manage your products and track orders in one place.
-            </p>
-          </div>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          {/* ── Public routes ── */}
+          <Route path="/login"    element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
-          {/* ── Theme toggle ── */}
-          <button
-            type="button"
-            className="theme-toggle"
-            onClick={toggleTheme}
-            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-          >
-            {theme === "dark" ? (
-              // In terminal mode: show a bracketed command-prompt style label
-              <span>[ light_mode ]</span>
-            ) : (
-              // In editorial mode: simple text label
-              <span>Dark mode</span>
-            )}
-          </button>
-        </div>
-      </header>
+          {/* ── Protected routes — must be logged in ── */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<AppLayout />}>
 
-      <div className="stats-bar-wrap">
-        <StatsBar stats={stats} loading={statsLoading} error={statsError} />
-      </div>
+              {/* Admin-only: Dashboard */}
+              <Route element={<AdminRoute />}>
+                <Route index element={<DashboardPage />} />
+              </Route>
 
-      <main className="app-main">
-        <ProductsSection
-          products={products}
-          loading={productsLoading}
-          error={productsError}
-          onProductsChange={setProducts}
-          onProductAdded={handleProductAdded}
-        />
+              {/* All authenticated users */}
+              <Route path="products"   element={<ProductsPage />} />
+              <Route path="orders/new" element={<PlaceOrderPage />} />
+              <Route path="orders"     element={<OrderHistoryPage />} />
 
-        <PlaceOrderSection
-          products={products}
-          onOrderPlaced={handleOrderPlaced}
-        />
+            </Route>
+          </Route>
 
-        <OrderHistorySection
-          orders={orders}
-          loading={ordersLoading}
-          error={ordersError}
-        />
-      </main>
-
-      <footer className="app-footer">
-        <p>Inventory API Frontend — connected to localhost:4001</p>
-      </footer>
-    </div>
+          {/* ── Catch-all ── */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

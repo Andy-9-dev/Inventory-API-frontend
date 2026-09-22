@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createProduct } from "../api";
 import type { NewProductPayload } from "../api";
+import { useAuth } from "../context/AuthContext";
 import type { Product } from "../types";
 
 interface Props {
@@ -41,6 +42,9 @@ export default function ProductsSection({
   onProductsChange,
   onProductAdded,
 }: Props) {
+  const { token, user, logout } = useAuth();
+  const isAdmin = user?.role === "admin";
+
   const [form, setForm] = useState<NewProductPayload>(EMPTY_FORM);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -63,10 +67,14 @@ export default function ProductsSection({
       setFormError("Stock cannot be negative.");
       return;
     }
+    if (!token) {
+      setFormError("Not authenticated.");
+      return;
+    }
 
     setSubmitting(true);
     try {
-      const created = await createProduct(form);
+      const created = await createProduct(form, token, logout);
       onProductsChange([...products, created]);
       onProductAdded();
       setSuccessMsg(`"${created.name}" added successfully.`);
@@ -122,7 +130,8 @@ export default function ProductsSection({
         </>
       )}
 
-      {/* ── Add product form ── */}
+      {/* ── Add product form — admin only ── */}
+      {isAdmin && (
       <details className="form-collapsible">
         <summary>Add a new product</summary>
         <form onSubmit={handleSubmit} className="inline-form" noValidate>
@@ -202,6 +211,7 @@ export default function ProductsSection({
           </button>
         </form>
       </details>
+      )}
     </section>
   );
 }

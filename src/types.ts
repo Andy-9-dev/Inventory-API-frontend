@@ -1,3 +1,5 @@
+// ── Products ──────────────────────────────────────────────────────────────────
+
 export interface Product {
   id: string;
   name: string;
@@ -5,6 +7,8 @@ export interface Product {
   stock: number;
   category: string; // may be empty string — display as "Uncategorized"
 }
+
+// ── Orders ────────────────────────────────────────────────────────────────────
 
 export interface Order {
   id: string;
@@ -39,11 +43,37 @@ export function isOrderRejected(
   return httpStatus === 200 && "message" in res;
 }
 
-// GET /api/stats
+// ── Stats ─────────────────────────────────────────────────────────────────────
+
 export interface StatsResponse {
   totalProducts: number;
   lowStockCount: number;
   totalOrders: number;
   confirmedOrders: number;
   rejectedOrders: number;
+}
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+
+export type UserRole = "admin" | "user";
+
+export interface User {
+  id: string;
+  email: string;
+  role: UserRole;
+}
+
+/** What gets persisted to localStorage alongside the raw JWT */
+export interface StoredSession {
+  token: string;
+  user: User;
+}
+
+export interface AuthContextValue {
+  token: string | null;
+  user: User | null;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, role: UserRole) => Promise<void>;
+  logout: () => void;
 }

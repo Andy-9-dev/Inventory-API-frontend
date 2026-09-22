@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createOrder } from "../api";
+import { useAuth } from "../context/AuthContext";
 import { isOrderRejected } from "../types";
 import type { Product } from "../types";
 
@@ -14,6 +15,7 @@ type OrderResult =
   | null;
 
 export default function PlaceOrderSection({ products, onOrderPlaced }: Props) {
+  const { token, logout } = useAuth();
   const [productId, setProductId] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
   const [submitting, setSubmitting] = useState(false);
@@ -37,7 +39,12 @@ export default function PlaceOrderSection({ products, onOrderPlaced }: Props) {
 
     setSubmitting(true);
     try {
-      const { httpStatus, data } = await createOrder({ product_id: productId, quantity });
+      if (!token) throw new Error("Not authenticated.");
+      const { httpStatus, data } = await createOrder(
+        { product_id: productId, quantity },
+        token,
+        logout
+      );
 
       if (isOrderRejected(data, httpStatus)) {
         // 200 rejected path — surface the backend's message
